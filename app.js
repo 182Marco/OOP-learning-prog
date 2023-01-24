@@ -1,5 +1,4 @@
 const getNode = str => document.querySelector(str)
-const getNodes = str => document.querySelectorAll(str)
 
 // constructors
 function Book(title, author, isbn) {
