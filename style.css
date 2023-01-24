@@ -1,0 +1,33 @@
+h1 {
+  margin-top: 60px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.success,
+.errors {
+   color: white;
+   padding: 5px;
+   margin: 5px 0 15px;
+}
+
+.success {
+  background-color: green;
+}
+
+.error {
+  background-color: red;
+}
+
+.delete {
+  color: red;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.delete:hover {
+  color: rgb(113, 7, 7);
+}
