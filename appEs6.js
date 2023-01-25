@@ -35,9 +35,33 @@ class UI {
 
   deleteBook({ target }) {
     if (target.className == 'delete') {
+      Storage.remove(target.previousElementSibling.textContent);
       target.parentElement.remove();
+      this.showAlert(`deleted`, ``);
     }
-    this.showAlert(`deleted`, ``);
+  }
+}
+
+class Storage {
+  static get(item) {
+    return JSON.parse(localStorage.getItem(item));
+  }
+  static set(key, val) {
+    localStorage.setItem(key, JSON.stringify(val));
+  }
+  static display() {
+    const ui = new UI();
+    this.get('books').forEach(b => ui.addBookToList(b));
+  }
+  static store(book) {
+    const books = this.get('books') || [];
+    books.push(book);
+    this.set('books', books);
+  }
+  static remove(isbn) {
+    let books = this.get('books');
+    books = [...books.filter(e => e.isbn != isbn)];
+    this.set('books', books);
   }
 }
 
@@ -45,14 +69,16 @@ class UI {
 const subForm = e => {
   e.preventDefault();
   const ui = new UI();
-  const t = getNode('#title').value,
-    a = getNode('#author').value,
-    ib = getNode('#isbn').value;
-  if (t === '' || a === '' || ib === '') {
+  const title = getNode('#title').value,
+    author = getNode('#author').value,
+    isbn = getNode('#isbn').value;
+  if (title === '' || author === '' || isbn === '') {
     ui.showAlert(`Each field it's required`, 'error');
     return;
   }
-  ui.addBookToList(new Book(t, a, ib));
+  const book = new Book(title, author, isbn);
+  ui.addBookToList(book);
+  Storage.store(book);
   ui.clearFields();
 };
 
@@ -63,3 +89,6 @@ const deleteB = e => {
 
 getNode('form').addEventListener('submit', e => subForm(e));
 getNode(`#book-list`).addEventListener('click', e => deleteB(e));
+
+document.addEventListener(`DOMContentLoaded`, Storage.display())
+
